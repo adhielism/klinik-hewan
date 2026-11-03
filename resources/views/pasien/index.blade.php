@@ -54,6 +54,25 @@
         <button type="submit">Simpan</button>
     </form>
 
+    <h2>Cari dan Filter</h2>
+    <form method="GET" action="/pasien-hewan">
+        <label>Kata kunci
+            <input type="text" name="q" value="{{ $q }}" placeholder="kode, nama, atau no. rekam">
+        </label>
+        <label>Jenis
+            <select name="jenis_hewan_id">
+                <option value="">Semua</option>
+                @foreach ($jenis as $j)
+                    <option value="{{ $j['id'] }}" {{ $filter == $j['id'] ? 'selected' : '' }}>
+                        {{ $j['nama_jenis'] }}
+                    </option>
+                @endforeach
+            </select>
+        </label>
+        <button type="submit">Cari</button>
+        <a href="/pasien-hewan">Reset</a>
+    </form>
+
     <h2>Daftar Pasien</h2>
     <table border="1" cellpadding="5">
         <thead>
@@ -65,6 +84,7 @@
                 <th>Usia</th>
                 <th>Status</th>
                 <th>Jenis</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -84,9 +104,17 @@
                         @endif
                     </td>
                     <td>{{ $p['nama_jenis'] }}</td>
+                    <td>
+                        <a href="/pasien-hewan/{{ $p['id'] }}/edit">Edit</a>
+                        <form method="POST" action="/pasien-hewan/{{ $p['id'] }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
             @empty
-                <tr><td colspan="7">Belum ada data.</td></tr>
+                <tr><td colspan="8">Data tidak ditemukan.</td></tr>
             @endforelse
         </tbody>
     </table>
